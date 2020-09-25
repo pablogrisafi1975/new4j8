@@ -426,6 +426,10 @@ public class New {
         return Collections.unmodifiableMap(map);
     }
 
+    public static <K, V> Map<K, V> hashMap(){
+        return  new HashMap<>();
+    }
+
     public static <K, V> Map<K, V> hashMap(K key0, V value0){
         Map<K, V> map = new HashMap<>();
         map.put(key0, value0);
