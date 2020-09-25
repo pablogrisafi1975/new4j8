@@ -139,7 +139,7 @@ public class New {
         return list;
     }
     @SafeVarargs
-    public static final <E> List<E> arrayList(E e0, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E... es){
+    public static <E> List<E> arrayList(E e0, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E... es){
         List<E> list = new ArrayList<>();
         list.add(e0);
         list.add(e1);
