@@ -2,7 +2,14 @@ package org.pgris;
 
 import java.util.*;
 
-public class New {
+public final class New {
+
+    /**
+     * Never create an instance
+     */
+    private New(){
+        //do not instantiate
+    }
 
     public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
@@ -506,6 +513,86 @@ public class New {
         return map;
     }
 
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass){
+        return new EnumMap<>(enumClass);
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        return map;
+    }
+
+    public static <K extends Enum<K>, V> EnumMap<K, V> enumMap(Class<K> enumClass, K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7){
+        EnumMap<K, V> map = new EnumMap<>(enumClass);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        return map;
+    }
+
     public static <K, V> Map.Entry<K, V> entry(K key, V value){
         return new AbstractMap.SimpleImmutableEntry<>(key, value);
     }
@@ -514,6 +601,11 @@ public class New {
         return Collections.emptyMap();
     }
 
+    public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e0){
+        Map<K, V> map = new HashMap<>();
+        map.put(e0.getKey(), e0.getValue());
+        return Collections.unmodifiableMap(map);
+    }
 
     public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e0, Map.Entry<K, V> e1){
         Map<K, V> map = new HashMap<>();
