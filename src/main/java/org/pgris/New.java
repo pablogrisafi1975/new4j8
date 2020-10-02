@@ -27,6 +27,30 @@ import java.util.*;
  * operations on these instances (reference equality ({@code ==}), identity hash code, and
  * synchronization) are unreliable and should be avoided.
  * </ul>
+ *
+ * <h2><a id="unmodifiableSets">Unmodifiable Sets</a></h2>
+ * <p>
+ * The {@link New#set(Object...) New.set} static factory methods provide a convenient way
+ * to create unmodifiable sets. The {@code Set} instances created by these methods have
+ * the following characteristics:
+ *
+ * <ul>
+ * <li>They are <a href="Collection.html#unmodifiable"><i>unmodifiable</i></a>. Elements
+ * cannot be added or removed. Calling any mutator method on the Set will always cause
+ * {@code UnsupportedOperationException} to be thrown. However, if the contained elements
+ * are themselves mutable, this may cause the Set to behave inconsistently or its contents
+ * to appear to change.
+ * <li>They disallow {@code null} elements. Attempts to create them with {@code null}
+ * elements result in {@code NullPointerException}.
+ * <li>They reject duplicate elements at creation time. Duplicate elements passed to a
+ * static factory method result in {@code IllegalArgumentException}.
+ * <li>The iteration order of set elements is unspecified and is subject to change.
+ * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>. Callers
+ * should make no assumptions about the identity of the returned instances. Factories are
+ * free to create new instances or reuse existing ones. Therefore, identity-sensitive
+ * operations on these instances (reference equality ({@code ==}), identity hash code, and
+ * synchronization) are unreliable and should be avoided.
+ * </ul>
  */
 public final class New {
 
@@ -435,10 +459,24 @@ public final class New {
 		return list;
 	}
 
+	/**
+	 * Returns an unmodifiable set containing zero elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @return an empty {@code Set}
+	 */
 	public static <E> Set<E> set() {
 		return Collections.emptySet();
 	}
 
+	/**
+	 * Returns an unmodifiable set containing one element. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the single element
+	 * @return a {@code Set} containing the specified element
+	 * @throws NullPointerException if the element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Set<E> set = new LinkedHashSet<>();
@@ -446,16 +484,37 @@ public final class New {
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing two elements. See
+	 * <a href="#unmodifiable">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if the elements are duplicates
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
+		checkRepeatedElement(set.add(e2), 1);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing three elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -463,11 +522,23 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing four elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3, E e4) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -476,12 +547,25 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing five elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -490,13 +574,27 @@ public final class New {
 		Objects.requireNonNull(e5, "e5 can not be null");
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
-		set.add(e5);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing six elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @param e6 the sixth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -507,14 +605,29 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
-		set.add(e5);
-		set.add(e6);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e6), 5);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing seven elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @param e6 the sixth element
+	 * @param e7 the seventh element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -526,15 +639,31 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
-		set.add(e5);
-		set.add(e6);
-		set.add(e7);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e6), 5);
+		checkRepeatedElement(set.add(e7), 6);
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Returns an unmodifiable set containing eight elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @param e6 the sixth element
+	 * @param e7 the seventh element
+	 * @param e8 the eighth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
 	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
@@ -547,18 +676,34 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
-		set.add(e5);
-		set.add(e6);
-		set.add(e7);
-		set.add(e8);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e6), 5);
+		checkRepeatedElement(set.add(e7), 6);
+		checkRepeatedElement(set.add(e8), 7);
 		return Collections.unmodifiableSet(set);
 	}
 
-	@SafeVarargs
-	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E... es) {
+	/**
+	 * Returns an unmodifiable set containing nine elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @param e6 the sixth element
+	 * @param e7 the seventh element
+	 * @param e8 the eighth element
+	 * @param e9 the ninth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
+	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
 		Objects.requireNonNull(e1, "e1 can not be null");
 		Objects.requireNonNull(e2, "e2 can not be null");
 		Objects.requireNonNull(e3, "e3 can not be null");
@@ -567,20 +712,97 @@ public final class New {
 		Objects.requireNonNull(e6, "e6 can not be null");
 		Objects.requireNonNull(e7, "e7 can not be null");
 		Objects.requireNonNull(e8, "e8 can not be null");
-		for (int i = 0; i < es.length; i++) {
-			Objects.requireNonNull(es[i + 8], "e" + (+8) + " can not be null");
-		}
+		Objects.requireNonNull(e9, "e9 can not be null");
+
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		set.add(e2);
-		set.add(e3);
-		set.add(e4);
-		set.add(e5);
-		set.add(e6);
-		set.add(e7);
-		set.add(e8);
-		for (E e : es) {
-			set.add(e);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e6), 5);
+		checkRepeatedElement(set.add(e7), 6);
+		checkRepeatedElement(set.add(e8), 7);
+		checkRepeatedElement(set.add(e9), 8);
+		return Collections.unmodifiableSet(set);
+	}
+
+	/**
+	 * Returns an unmodifiable set containing ten elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 * @param <E> the {@code Set}'s element type
+	 * @param e1 the first element
+	 * @param e2 the second element
+	 * @param e3 the third element
+	 * @param e4 the fourth element
+	 * @param e5 the fifth element
+	 * @param e6 the sixth element
+	 * @param e7 the seventh element
+	 * @param e8 the eighth element
+	 * @param e9 the ninth element
+	 * @param e10 the tenth element
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null}
+	 */
+	public static <E> Set<E> set(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e7, "e7 can not be null");
+		Objects.requireNonNull(e8, "e8 can not be null");
+		Objects.requireNonNull(e9, "e9 can not be null");
+		Objects.requireNonNull(e10, "e10 can not be null");
+
+		Set<E> set = new LinkedHashSet<>();
+		set.add(e1);
+		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e6), 5);
+		checkRepeatedElement(set.add(e7), 6);
+		checkRepeatedElement(set.add(e8), 7);
+		checkRepeatedElement(set.add(e9), 8);
+		checkRepeatedElement(set.add(e10), 9);
+		return Collections.unmodifiableSet(set);
+	}
+
+	/**
+	 * Returns an unmodifiable set containing an arbitrary number of elements. See
+	 * <a href="#unmodifiableSets">Unmodifiable Sets</a> for details.
+	 *
+	 * @apiNote This method also accepts a single array as an argument. The element type
+	 * of the resulting set will be the component type of the array, and the size of the
+	 * set will be equal to the length of the array. To create a set with a single element
+	 * that is an array, do the following:
+	 *
+	 * <pre>{@code
+	 *     String[] array = ... ;
+	 *     Set<String[]> list = New.<String[]>set(array);
+	 * }</pre>
+	 *
+	 * This will cause the {@link New#set(Object) New.set(E)} method to be invoked
+	 * instead.
+	 * @param <E> the {@code Set}'s element type
+	 * @param elements the elements to be contained in the set
+	 * @return a {@code Set} containing the specified elements
+	 * @throws IllegalArgumentException if there are any duplicate elements
+	 * @throws NullPointerException if an element is {@code null} or if the array is
+	 * {@code null}
+	 */
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <E> Set<E> set(E... elements) {
+		for (int i = 0; i < elements.length; i++) {
+			Objects.requireNonNull(elements[i], "e" + (i + 1) + " can not be null");
+		}
+		Set<E> set = new LinkedHashSet<>();
+		for (int i = 0; i < elements.length; i++) {
+			checkRepeatedElement(set.add(elements[i]), i);
 		}
 		return Collections.unmodifiableSet(set);
 	}
@@ -1460,6 +1682,12 @@ public final class New {
 		calendar.set(Calendar.SECOND, second);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
+	}
+
+	private static void checkRepeatedElement(boolean addResult, int i) {
+		if (addResult == false) {
+			throw new IllegalArgumentException("e" + (i + 1) + " repeats a previous element");
+		}
 	}
 
 }
