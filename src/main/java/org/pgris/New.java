@@ -525,7 +525,7 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
+		checkRepeatedElement(set.add(e2), 2);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -547,8 +547,8 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -572,9 +572,9 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -599,10 +599,10 @@ public final class New {
 		Objects.requireNonNull(e5, "e5 can not be null");
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -630,11 +630,11 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
-		checkRepeatedElement(set.add(e6), 5);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
+		checkRepeatedElement(set.add(e6), 6);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -664,12 +664,12 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
-		checkRepeatedElement(set.add(e6), 5);
-		checkRepeatedElement(set.add(e7), 6);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
+		checkRepeatedElement(set.add(e6), 6);
+		checkRepeatedElement(set.add(e7), 7);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -701,13 +701,13 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
-		checkRepeatedElement(set.add(e6), 5);
-		checkRepeatedElement(set.add(e7), 6);
-		checkRepeatedElement(set.add(e8), 7);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
+		checkRepeatedElement(set.add(e6), 6);
+		checkRepeatedElement(set.add(e7), 7);
+		checkRepeatedElement(set.add(e8), 8);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -741,14 +741,14 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
-		checkRepeatedElement(set.add(e6), 5);
-		checkRepeatedElement(set.add(e7), 6);
-		checkRepeatedElement(set.add(e8), 7);
-		checkRepeatedElement(set.add(e9), 8);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
+		checkRepeatedElement(set.add(e6), 6);
+		checkRepeatedElement(set.add(e7), 7);
+		checkRepeatedElement(set.add(e8), 8);
+		checkRepeatedElement(set.add(e9), 9);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -784,15 +784,15 @@ public final class New {
 
 		Set<E> set = new LinkedHashSet<>();
 		set.add(e1);
-		checkRepeatedElement(set.add(e2), 1);
-		checkRepeatedElement(set.add(e3), 2);
-		checkRepeatedElement(set.add(e4), 3);
-		checkRepeatedElement(set.add(e5), 4);
-		checkRepeatedElement(set.add(e6), 5);
-		checkRepeatedElement(set.add(e7), 6);
-		checkRepeatedElement(set.add(e8), 7);
-		checkRepeatedElement(set.add(e9), 8);
-		checkRepeatedElement(set.add(e10), 9);
+		checkRepeatedElement(set.add(e2), 2);
+		checkRepeatedElement(set.add(e3), 3);
+		checkRepeatedElement(set.add(e4), 4);
+		checkRepeatedElement(set.add(e5), 5);
+		checkRepeatedElement(set.add(e6), 6);
+		checkRepeatedElement(set.add(e7), 7);
+		checkRepeatedElement(set.add(e8), 8);
+		checkRepeatedElement(set.add(e9), 9);
+		checkRepeatedElement(set.add(e10), 10);
 		return Collections.unmodifiableSet(set);
 	}
 
@@ -827,7 +827,7 @@ public final class New {
 		}
 		Set<E> set = new LinkedHashSet<>();
 		for (int i = 0; i < elements.length; i++) {
-			checkRepeatedElement(set.add(elements[i]), i);
+			checkRepeatedElement(set.add(elements[i]), i + 1);
 		}
 		return Collections.unmodifiableSet(set);
 	}
@@ -2051,9 +2051,9 @@ public final class New {
 		return calendar.getTime();
 	}
 
-	private static void checkRepeatedElement(boolean addResult, int i) {
+	private static void checkRepeatedElement(boolean addResult, int repeatedPosition) {
 		if (addResult == false) {
-			throw new IllegalArgumentException("e" + (i + 1) + " repeats a previous element");
+			throw new IllegalArgumentException("e" + repeatedPosition + " repeats a previous element");
 		}
 	}
 
