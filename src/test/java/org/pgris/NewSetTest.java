@@ -175,11 +175,11 @@ public class NewSetTest {
 					executable = () -> method.invoke(null, new Object[] { arguments });
 				}
 				InvocationTargetException ite = assertThrows(InvocationTargetException.class, executable,
-						"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(","))
+						"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(", "))
 								+ ") should have thrown a IllegalArgumentException");
 				IllegalArgumentException iae = (IllegalArgumentException) ite.getCause();
 				assertEquals("e" + (repeatedPosition + 1) + " repeats a previous element", iae.getMessage(),
-						"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(","))
+						"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(", "))
 								+ ") should have an exception with another message");
 			}
 		}
@@ -211,14 +211,14 @@ public class NewSetTest {
 				executable = () -> method.invoke(null, new Object[] { arguments });
 			}
 			InvocationTargetException ite = assertThrows(InvocationTargetException.class, executable,
-					"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(","))
+					"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(", "))
 							+ ") should have thrown a NullPointerException (inside a InvocationTargetException because reflection)");
 			assertEquals(NullPointerException.class, ite.getCause().getClass(), "The call to New.set("
 					+ Arrays.stream(arguments).collect(Collectors.joining(","))
 					+ ") should have thrown a NullPointerException (inside a InvocationTargetException because reflection)");
 			NullPointerException npe = (NullPointerException) ite.getCause();
 			assertEquals("e" + (nullPosition + 1) + " can not be null", npe.getMessage(),
-					"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(","))
+					"The call to New.set(" + Arrays.stream(arguments).collect(Collectors.joining(", "))
 							+ ") should have thrown a NullPointerException with another message");
 
 		}

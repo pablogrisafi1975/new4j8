@@ -51,6 +51,31 @@ import java.util.*;
  * operations on these instances (reference equality ({@code ==}), identity hash code, and
  * synchronization) are unreliable and should be avoided.
  * </ul>
+ *
+ * <h2><a id="unmodifiableMaps">Unmodifiable Maps</a></h2>
+ * <p>
+ * The {@link New#map() New.map}, {@link New#mapOfEntries(Map.Entry...) New.mapOfEntries}
+ * static factory methods provide a convenient way to create unmodifiable maps. The
+ * {@code Map} instances created by these methods have the following characteristics:
+ *
+ * <ul>
+ * <li>They are <a href="Collection.html#unmodifiable"><i>unmodifiable</i></a>. Keys and
+ * values cannot be added, removed, or updated. Calling any mutator method on the Map will
+ * always cause {@code UnsupportedOperationException} to be thrown. However, if the
+ * contained keys or values are themselves mutable, this may cause the Map to behave
+ * inconsistently or its contents to appear to change.
+ * <li>They disallow {@code null} keys and values. Attempts to create them with
+ * {@code null} keys or values result in {@code NullPointerException}.
+ * <li>They reject duplicate keys at creation time. Duplicate keys passed to a static
+ * factory method result in {@code IllegalArgumentException}.
+ * <li>The iteration order of mappings is unspecified and is subject to change.
+ * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>. Callers
+ * should make no assumptions about the identity of the returned instances. Factories are
+ * free to create new instances or reuse existing ones. Therefore, identity-sensitive
+ * operations on these instances (reference equality ({@code ==}), identity hash code, and
+ * synchronization) are unreliable and should be avoided.
+ * </ul>
+ *
  */
 public final class New {
 
@@ -902,16 +927,47 @@ public final class New {
 		return set;
 	}
 
+	/**
+	 * Returns an unmodifiable map containing zero mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @return an empty {@code Map}
+	 */
+	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> map() {
 		return Collections.emptyMap();
 	}
 
+	/**
+	 * Returns an unmodifiable map containing a single mapping. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the mapping's key
+	 * @param v1 the mapping's value
+	 * @return a {@code Map} containing the specified mapping
+	 * @throws NullPointerException if the key or the value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1) {
 		Objects.requireNonNull(k1, "k1 can not be null");
 		Objects.requireNonNull(v1, "v1 can not be null");
 		return Collections.singletonMap(k1, v1);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing two mappings. See
+	 * <a href="#unmodifiable">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if the keys are duplicates
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2) {
 		Objects.requireNonNull(k1, "k1 can not be null");
 		Objects.requireNonNull(v1, "v1 can not be null");
@@ -920,78 +976,389 @@ public final class New {
 
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		checkRepeatedKey(map.put(k2, v2));
+		checkRepeatedKey(map.put(k2, v2), 2);
 		return Collections.unmodifiableMap(map);
 	}
 
-	private static <V> void checkRepeatedKey(V putResult) {
+	private static <V> void checkRepeatedKey(V putResult, int repeatedPosition) {
 		if (putResult != null) {
-			throw new IllegalArgumentException("duplicate key: " + putResult);
+			throw new IllegalArgumentException("k" + repeatedPosition + " repeats a previous key");
 		}
 	}
 
+	/**
+	 * Returns an unmodifiable map containing three mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing four mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
-		map.put(k4, v4);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing five mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
-		map.put(k4, v4);
-		map.put(k5, v5);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing six mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @param k6 the sixth mapping's key
+	 * @param v6 the sixth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
+		Objects.requireNonNull(k6, "k6 can not be null");
+		Objects.requireNonNull(v6, "v6 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
-		map.put(k4, v4);
-		map.put(k5, v5);
-		map.put(k6, v6);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
+		checkRepeatedKey(map.put(k6, v6), 6);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing seven mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @param k6 the sixth mapping's key
+	 * @param v6 the sixth mapping's value
+	 * @param k7 the seventh mapping's key
+	 * @param v7 the seventh mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7,
 			V v7) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
+		Objects.requireNonNull(k6, "k6 can not be null");
+		Objects.requireNonNull(v6, "v6 can not be null");
+		Objects.requireNonNull(k7, "k7 can not be null");
+		Objects.requireNonNull(v7, "v7 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
-		map.put(k4, v4);
-		map.put(k5, v5);
-		map.put(k6, v6);
-		map.put(k7, v7);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
+		checkRepeatedKey(map.put(k6, v6), 6);
+		checkRepeatedKey(map.put(k7, v7), 7);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing eight mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @param k6 the sixth mapping's key
+	 * @param v6 the sixth mapping's value
+	 * @param k7 the seventh mapping's key
+	 * @param v7 the seventh mapping's value
+	 * @param k8 the eighth mapping's key
+	 * @param v8 the eighth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
 	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7,
 			V v7, K k8, V v8) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
+		Objects.requireNonNull(k6, "k6 can not be null");
+		Objects.requireNonNull(v6, "v6 can not be null");
+		Objects.requireNonNull(k7, "k7 can not be null");
+		Objects.requireNonNull(v7, "v7 can not be null");
+		Objects.requireNonNull(k8, "k8 can not be null");
+		Objects.requireNonNull(v8, "v8 can not be null");
 		Map<K, V> map = new HashMap<>();
 		map.put(k1, v1);
-		map.put(k2, v2);
-		map.put(k3, v3);
-		map.put(k4, v4);
-		map.put(k5, v5);
-		map.put(k6, v6);
-		map.put(k7, v7);
-		map.put(k8, v8);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
+		checkRepeatedKey(map.put(k6, v6), 6);
+		checkRepeatedKey(map.put(k7, v7), 7);
+		checkRepeatedKey(map.put(k8, v8), 8);
+		return Collections.unmodifiableMap(map);
+	}
+
+	/**
+	 * Returns an unmodifiable map containing eight mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @param k6 the sixth mapping's key
+	 * @param v6 the sixth mapping's value
+	 * @param k7 the seventh mapping's key
+	 * @param v7 the seventh mapping's value
+	 * @param k8 the eighth mapping's key
+	 * @param v8 the eighth mapping's value
+	 * @param k9 the ninth mapping's key
+	 * @param v9 the ninth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
+	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7,
+			V v7, K k8, V v8, K k9, V v9) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
+		Objects.requireNonNull(k6, "k6 can not be null");
+		Objects.requireNonNull(v6, "v6 can not be null");
+		Objects.requireNonNull(k7, "k7 can not be null");
+		Objects.requireNonNull(v7, "v7 can not be null");
+		Objects.requireNonNull(k8, "k8 can not be null");
+		Objects.requireNonNull(v8, "v8 can not be null");
+		Objects.requireNonNull(k9, "k9 can not be null");
+		Objects.requireNonNull(v9, "v9 can not be null");
+		Map<K, V> map = new HashMap<>();
+		map.put(k1, v1);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
+		checkRepeatedKey(map.put(k6, v6), 6);
+		checkRepeatedKey(map.put(k7, v7), 7);
+		checkRepeatedKey(map.put(k8, v8), 8);
+		checkRepeatedKey(map.put(k9, v9), 9);
+		return Collections.unmodifiableMap(map);
+	}
+
+	/**
+	 * Returns an unmodifiable map containing eight mappings. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param k1 the first mapping's key
+	 * @param v1 the first mapping's value
+	 * @param k2 the second mapping's key
+	 * @param v2 the second mapping's value
+	 * @param k3 the third mapping's key
+	 * @param v3 the third mapping's value
+	 * @param k4 the fourth mapping's key
+	 * @param v4 the fourth mapping's value
+	 * @param k5 the fifth mapping's key
+	 * @param v5 the fifth mapping's value
+	 * @param k6 the sixth mapping's key
+	 * @param v6 the sixth mapping's value
+	 * @param k7 the seventh mapping's key
+	 * @param v7 the seventh mapping's value
+	 * @param k8 the eighth mapping's key
+	 * @param v8 the eighth mapping's value
+	 * @param k9 the ninth mapping's key
+	 * @param v9 the ninth mapping's value
+	 * @param k10 the tenth mapping's key
+	 * @param v10 the tenth mapping's value
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any key or value is {@code null}
+	 */
+	public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7,
+			V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
+		Objects.requireNonNull(k1, "k1 can not be null");
+		Objects.requireNonNull(v1, "v1 can not be null");
+		Objects.requireNonNull(k2, "k2 can not be null");
+		Objects.requireNonNull(v2, "v2 can not be null");
+		Objects.requireNonNull(k3, "k3 can not be null");
+		Objects.requireNonNull(v3, "v3 can not be null");
+		Objects.requireNonNull(k4, "k4 can not be null");
+		Objects.requireNonNull(v4, "v4 can not be null");
+		Objects.requireNonNull(k5, "k5 can not be null");
+		Objects.requireNonNull(v5, "v5 can not be null");
+		Objects.requireNonNull(k6, "k6 can not be null");
+		Objects.requireNonNull(v6, "v6 can not be null");
+		Objects.requireNonNull(k7, "k7 can not be null");
+		Objects.requireNonNull(v7, "v7 can not be null");
+		Objects.requireNonNull(k8, "k8 can not be null");
+		Objects.requireNonNull(v8, "v8 can not be null");
+		Objects.requireNonNull(k9, "k9 can not be null");
+		Objects.requireNonNull(v9, "v9 can not be null");
+		Objects.requireNonNull(k10, "k10 can not be null");
+		Objects.requireNonNull(v10, "v10 can not be null");
+		Map<K, V> map = new HashMap<>();
+		map.put(k1, v1);
+		checkRepeatedKey(map.put(k2, v2), 2);
+		checkRepeatedKey(map.put(k3, v3), 3);
+		checkRepeatedKey(map.put(k4, v4), 4);
+		checkRepeatedKey(map.put(k5, v5), 5);
+		checkRepeatedKey(map.put(k6, v6), 6);
+		checkRepeatedKey(map.put(k7, v7), 7);
+		checkRepeatedKey(map.put(k8, v8), 8);
+		checkRepeatedKey(map.put(k9, v9), 9);
+		checkRepeatedKey(map.put(k10, v10), 10);
 		return Collections.unmodifiableMap(map);
 	}
 
