@@ -1529,8 +1529,39 @@ public final class New {
 		return map;
 	}
 
-	public static <K, V> Map.Entry<K, V> entry(K key, V value) {
-		return new AbstractMap.SimpleImmutableEntry<>(key, value);
+	/**
+	 * Returns an unmodifiable {@link Entry} containing the given key and value.
+	 * These entries are suitable for populating {@code Map} instances using the
+	 * {@link New#mapOfEntries New.mapOfEntries()} method.
+	 * The {@code Entry} instances created by this method have the following characteristics:
+	 *
+	 * <ul>
+	 * <li>They disallow {@code null} keys and values. Attempts to create them using a {@code null}
+	 * key or value result in {@code NullPointerException}.
+	 * <li>They are unmodifiable. Calls to {@link Entry#setValue Entry.setValue()}
+	 * on a returned {@code Entry} result in {@code UnsupportedOperationException}.
+	 * <li>They are serializable.
+	 * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>.
+	 * Callers should make no assumptions about the identity of the returned instances.
+	 * This method is free to create new instances or reuse existing ones. Therefore,
+	 * identity-sensitive operations on these instances (reference equality ({@code ==}),
+	 * identity hash code, and synchronization) are unreliable and should be avoided.
+	 * </ul>
+	 *
+	 *
+	 * @param <K> the key's type
+	 * @param <V> the value's type
+	 * @param k the key
+	 * @param v the value
+	 * @return an {@code Entry} containing the specified key and value
+	 * @throws NullPointerException if the key or value is {@code null}
+	 *
+	 * @see New#mapOfEntries New.mapOfEntries()
+	 */
+	public static <K, V> Map.Entry<K, V> entry(K k, V v) {
+		Objects.requireNonNull(k, "k can not be null");
+		Objects.requireNonNull(v, "v can not be null");
+		return new AbstractMap.SimpleImmutableEntry<>(k, v);
 	}
 
 	public static <K, V> Map<K, V> mapOfEntries() {
