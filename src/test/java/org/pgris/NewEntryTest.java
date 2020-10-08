@@ -8,7 +8,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 public class NewEntryTest {
 
 	@Test
@@ -29,7 +28,6 @@ public class NewEntryTest {
 		NullPointerException npe = assertThrows(NullPointerException.class, () -> New.entry("key", null));
 		assertEquals("v can not be null", npe.getMessage());
 	}
-
 
 	@Test
 	public void testEntryUnmodifiable() {

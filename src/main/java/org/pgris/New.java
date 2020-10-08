@@ -17,9 +17,10 @@ import java.util.*;
  * to change.
  * <li>They disallow {@code null} elements. Attempts to create them with {@code null}
  * elements result in {@code NullPointerException}.
+ * <li>They are serializable if all elements are serializable.
  * <li>The order of elements in the list is the same as the order of the provided
  * arguments, or of the elements in the provided array.
- * <li>The lists and their {@link #subList(int, int) subList} views implement the
+ * <li>The lists and their {@link List#subList(int, int) subList} views implement the
  * {@link RandomAccess} interface.
  * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>. Callers
  * should make no assumptions about the identity of the returned instances. Factories are
@@ -42,6 +43,7 @@ import java.util.*;
  * to appear to change.
  * <li>They disallow {@code null} elements. Attempts to create them with {@code null}
  * elements result in {@code NullPointerException}.
+ * <li>They are serializable if all elements are serializable.
  * <li>They reject duplicate elements at creation time. Duplicate elements passed to a
  * static factory method result in {@code IllegalArgumentException}.
  * <li>The iteration order of set elements is unspecified and is subject to change.
@@ -66,6 +68,7 @@ import java.util.*;
  * inconsistently or its contents to appear to change.
  * <li>They disallow {@code null} keys and values. Attempts to create them with
  * {@code null} keys or values result in {@code NullPointerException}.
+ * <li>They are serializable if all keys and values are serializable.
  * <li>They reject duplicate keys at creation time. Duplicate keys passed to a static
  * factory method result in {@code IllegalArgumentException}.
  * <li>The iteration order of mappings is unspecified and is subject to change.
@@ -934,7 +937,6 @@ public final class New {
 	 * @param <V> the {@code Map}'s value type
 	 * @return an empty {@code Map}
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> map() {
 		return Collections.emptyMap();
 	}
@@ -1238,7 +1240,7 @@ public final class New {
 	}
 
 	/**
-	 * Returns an unmodifiable map containing eight mappings. See
+	 * Returns an unmodifiable map containing nine mappings. See
 	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
 	 * @param <K> the {@code Map}'s key type
 	 * @param <V> the {@code Map}'s value type
@@ -1298,7 +1300,7 @@ public final class New {
 	}
 
 	/**
-	 * Returns an unmodifiable map containing eight mappings. See
+	 * Returns an unmodifiable map containing ten mappings. See
 	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
 	 * @param <K> the {@code Map}'s key type
 	 * @param <V> the {@code Map}'s value type
@@ -1530,25 +1532,23 @@ public final class New {
 	}
 
 	/**
-	 * Returns an unmodifiable {@link Entry} containing the given key and value.
-	 * These entries are suitable for populating {@code Map} instances using the
-	 * {@link New#mapOfEntries New.mapOfEntries()} method.
-	 * The {@code Entry} instances created by this method have the following characteristics:
+	 * Returns an unmodifiable {@link Map.Entry} containing the given key and value. These
+	 * entries are suitable for populating {@code Map} instances using the
+	 * {@link New#mapOfEntries New.mapOfEntries()} method. The {@code Entry} instances
+	 * created by this method have the following characteristics:
 	 *
 	 * <ul>
-	 * <li>They disallow {@code null} keys and values. Attempts to create them using a {@code null}
-	 * key or value result in {@code NullPointerException}.
-	 * <li>They are unmodifiable. Calls to {@link Entry#setValue Entry.setValue()}
-	 * on a returned {@code Entry} result in {@code UnsupportedOperationException}.
+	 * <li>They disallow {@code null} keys and values. Attempts to create them using a
+	 * {@code null} key or value result in {@code NullPointerException}.
+	 * <li>They are unmodifiable. Calls to {@link Map.Entry#setValue Entry.setValue()} on
+	 * a returned {@code Entry} result in {@code UnsupportedOperationException}.
 	 * <li>They are serializable.
-	 * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>.
-	 * Callers should make no assumptions about the identity of the returned instances.
-	 * This method is free to create new instances or reuse existing ones. Therefore,
+	 * <li>They are <a href="../lang/doc-files/ValueBased.html">value-based</a>. Callers
+	 * should make no assumptions about the identity of the returned instances. This
+	 * method is free to create new instances or reuse existing ones. Therefore,
 	 * identity-sensitive operations on these instances (reference equality ({@code ==}),
 	 * identity hash code, and synchronization) are unreliable and should be avoided.
 	 * </ul>
-	 *
-	 *
 	 * @param <K> the key's type
 	 * @param <V> the value's type
 	 * @param k the key
@@ -1564,106 +1564,628 @@ public final class New {
 		return new AbstractMap.SimpleImmutableEntry<>(k, v);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries()
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries() {
 		return Collections.emptyMap();
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         entry(4, "d"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(5, "e"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4, Map.Entry<K, V> e5) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
-		map.put(e5.getKey(), e5.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(6, "f"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 * @param e6 the sixth entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4, Map.Entry<K, V> e5, Map.Entry<K, V> e6) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
+		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
-		map.put(e5.getKey(), e5.getValue());
-		map.put(e6.getKey(), e6.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
+		checkRepeatedKey(map.put(e6.getKey(), e6.getValue()), 6);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(7, "g"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 * @param e6 the sixth entry
+	 * @param e7 the seventh entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4, Map.Entry<K, V> e5, Map.Entry<K, V> e6, Map.Entry<K, V> e7) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
+		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e7, "e7 can not be null");
+		Objects.requireNonNull(e7.getKey(), "e7.key can not be null");
+		Objects.requireNonNull(e7.getValue(), "e7.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
-		map.put(e5.getKey(), e5.getValue());
-		map.put(e6.getKey(), e6.getValue());
-		map.put(e7.getKey(), e7.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
+		checkRepeatedKey(map.put(e6.getKey(), e6.getValue()), 6);
+		checkRepeatedKey(map.put(e7.getKey(), e7.getValue()), 7);
 		return Collections.unmodifiableMap(map);
 	}
 
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(8, "h"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 * @param e6 the sixth entry
+	 * @param e7 the seventh entry
+	 * @param e8 the eighth entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4, Map.Entry<K, V> e5, Map.Entry<K, V> e6, Map.Entry<K, V> e7, Map.Entry<K, V> e8) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
+		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e7, "e7 can not be null");
+		Objects.requireNonNull(e7.getKey(), "e7.key can not be null");
+		Objects.requireNonNull(e7.getValue(), "e7.value can not be null");
+		Objects.requireNonNull(e8, "e8 can not be null");
+		Objects.requireNonNull(e8.getKey(), "e8.key can not be null");
+		Objects.requireNonNull(e8.getValue(), "e8.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
-		map.put(e5.getKey(), e5.getValue());
-		map.put(e6.getKey(), e6.getValue());
-		map.put(e7.getKey(), e7.getValue());
-		map.put(e8.getKey(), e8.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
+		checkRepeatedKey(map.put(e6.getKey(), e6.getValue()), 6);
+		checkRepeatedKey(map.put(e7.getKey(), e7.getValue()), 7);
+		checkRepeatedKey(map.put(e8.getKey(), e8.getValue()), 8);
 		return Collections.unmodifiableMap(map);
 	}
 
-	@SafeVarargs
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(9, "i"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 * @param e6 the sixth entry
+	 * @param e7 the seventh entry
+	 * @param e8 the eighth entry
+	 * @param e9 the ninth entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
 	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
 			Map.Entry<K, V> e4, Map.Entry<K, V> e5, Map.Entry<K, V> e6, Map.Entry<K, V> e7, Map.Entry<K, V> e8,
-			Map.Entry<K, V>... es) {
+			Map.Entry<K, V> e9) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
+		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e7, "e7 can not be null");
+		Objects.requireNonNull(e7.getKey(), "e7.key can not be null");
+		Objects.requireNonNull(e7.getValue(), "e7.value can not be null");
+		Objects.requireNonNull(e8, "e8 can not be null");
+		Objects.requireNonNull(e8.getKey(), "e8.key can not be null");
+		Objects.requireNonNull(e8.getValue(), "e8.value can not be null");
+		Objects.requireNonNull(e9, "e9 can not be null");
+		Objects.requireNonNull(e9.getKey(), "e9.key can not be null");
+		Objects.requireNonNull(e9.getValue(), "e9.value can not be null");
+
 		Map<K, V> map = new HashMap<>();
 		map.put(e1.getKey(), e1.getValue());
-		map.put(e2.getKey(), e2.getValue());
-		map.put(e3.getKey(), e3.getValue());
-		map.put(e4.getKey(), e4.getValue());
-		map.put(e5.getKey(), e5.getValue());
-		map.put(e6.getKey(), e6.getValue());
-		map.put(e7.getKey(), e7.getValue());
-		map.put(e8.getKey(), e8.getValue());
-		for (Map.Entry<K, V> e : es) {
-			map.put(e.getKey(), e.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
+		checkRepeatedKey(map.put(e6.getKey(), e6.getValue()), 6);
+		checkRepeatedKey(map.put(e7.getKey(), e7.getValue()), 7);
+		checkRepeatedKey(map.put(e8.getKey(), e8.getValue()), 8);
+		checkRepeatedKey(map.put(e9.getKey(), e9.getValue()), 9);
+		return Collections.unmodifiableMap(map);
+	}
+
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(10, "j"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param e1 the first entry
+	 * @param e2 the second entry
+	 * @param e3 the third entry
+	 * @param e4 the fourth entry
+	 * @param e5 the fifth entry
+	 * @param e6 the sixth entry
+	 * @param e7 the seventh entry
+	 * @param e8 the eighth entry
+	 * @param e9 the ninth entry
+	 * @param e10 the tenth entry
+	 *
+	 * @see Map#entry Map.entry()
+	 */
+	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<K, V> e1, Map.Entry<K, V> e2, Map.Entry<K, V> e3,
+			Map.Entry<K, V> e4, Map.Entry<K, V> e5, Map.Entry<K, V> e6, Map.Entry<K, V> e7, Map.Entry<K, V> e8,
+			Map.Entry<K, V> e9, Map.Entry<K, V> e10) {
+		Objects.requireNonNull(e1, "e1 can not be null");
+		Objects.requireNonNull(e1.getKey(), "e1.key can not be null");
+		Objects.requireNonNull(e1.getValue(), "e1.value can not be null");
+		Objects.requireNonNull(e2, "e2 can not be null");
+		Objects.requireNonNull(e2.getKey(), "e2.key can not be null");
+		Objects.requireNonNull(e2.getValue(), "e2.value can not be null");
+		Objects.requireNonNull(e3, "e3 can not be null");
+		Objects.requireNonNull(e3.getKey(), "e3.key can not be null");
+		Objects.requireNonNull(e3.getValue(), "e3.value can not be null");
+		Objects.requireNonNull(e4, "e4 can not be null");
+		Objects.requireNonNull(e4.getKey(), "e4.key can not be null");
+		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
+		Objects.requireNonNull(e5, "e5 can not be null");
+		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
+		Objects.requireNonNull(e5.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e6, "e6 can not be null");
+		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
+		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e7, "e7 can not be null");
+		Objects.requireNonNull(e7.getKey(), "e7.key can not be null");
+		Objects.requireNonNull(e7.getValue(), "e7.value can not be null");
+		Objects.requireNonNull(e8, "e8 can not be null");
+		Objects.requireNonNull(e8.getKey(), "e8.key can not be null");
+		Objects.requireNonNull(e8.getValue(), "e8.value can not be null");
+		Objects.requireNonNull(e9, "e9 can not be null");
+		Objects.requireNonNull(e9.getKey(), "e9.key can not be null");
+		Objects.requireNonNull(e9.getValue(), "e9.value can not be null");
+		Objects.requireNonNull(e10, "e10 can not be null");
+		Objects.requireNonNull(e10.getKey(), "e10.key can not be null");
+		Objects.requireNonNull(e10.getValue(), "e10.value can not be null");
+
+		Map<K, V> map = new HashMap<>();
+		map.put(e1.getKey(), e1.getValue());
+		checkRepeatedKey(map.put(e2.getKey(), e2.getValue()), 2);
+		checkRepeatedKey(map.put(e3.getKey(), e3.getValue()), 3);
+		checkRepeatedKey(map.put(e4.getKey(), e4.getValue()), 4);
+		checkRepeatedKey(map.put(e5.getKey(), e5.getValue()), 5);
+		checkRepeatedKey(map.put(e6.getKey(), e6.getValue()), 6);
+		checkRepeatedKey(map.put(e7.getKey(), e7.getValue()), 7);
+		checkRepeatedKey(map.put(e8.getKey(), e8.getValue()), 8);
+		checkRepeatedKey(map.put(e9.getKey(), e9.getValue()), 9);
+		checkRepeatedKey(map.put(e10.getKey(), e10.getValue()), 10);
+		return Collections.unmodifiableMap(map);
+	}
+
+	/**
+	 * Returns an unmodifiable map containing keys and values extracted from the given
+	 * entries. The entries themselves are not stored in the map. See
+	 * <a href="#unmodifiableMaps">Unmodifiable Maps</a> for details.
+	 *
+	 * @apiNote It is convenient to create the map entries using the {@link New#entry
+	 * New.entry()} method. For example,
+	 *
+	 * <pre>{@code
+	 *     import static org.pgris.New.entry;
+	 *
+	 *     Map<Integer,String> map = Map.ofEntries(
+	 *         entry(1, "a"),
+	 *         entry(2, "b"),
+	 *         entry(3, "c"),
+	 *         ...
+	 *         entry(26, "z"));
+	 * }</pre>
+	 * @param <K> the {@code Map}'s key type
+	 * @param <V> the {@code Map}'s value type
+	 * @param entries {@code Map.Entry}s containing the keys and values from which the map
+	 * is populated
+	 * @return a {@code Map} containing the specified mappings
+	 * @throws IllegalArgumentException if there are any duplicate keys
+	 * @throws NullPointerException if any entry, key, or value is {@code null}, or if the
+	 * {@code entries} array is {@code null}
+	 *
+	 * @see Map#entry Map.entry()
+	 */
+	public static <K, V> Map<K, V> mapOfEntries(Map.Entry<? extends K, ? extends V>... entries) {
+		Map<K, V> map = new HashMap<>();
+		for (int i = 0; i < entries.length; i++) {
+			Map.Entry<? extends K, ? extends V> e = entries[i];
+			Objects.requireNonNull(e, "entry" + (i + 1) + " can not be null");
+			Objects.requireNonNull(e.getKey(), "entry" + (i + 1) + ".key can not be null");
+			Objects.requireNonNull(e.getValue(), "entry" + (i + 1) + ".value can not be null");
+			checkRepeatedKey(map.put(e.getKey(), e.getValue()), i);
 		}
 		return Collections.unmodifiableMap(map);
 	}
