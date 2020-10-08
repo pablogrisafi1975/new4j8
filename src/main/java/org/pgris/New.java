@@ -2118,7 +2118,7 @@ public final class New {
 		Objects.requireNonNull(e4.getValue(), "e4.value can not be null");
 		Objects.requireNonNull(e5, "e5 can not be null");
 		Objects.requireNonNull(e5.getKey(), "e5.key can not be null");
-		Objects.requireNonNull(e5.getValue(), "e6.value can not be null");
+		Objects.requireNonNull(e5.getValue(), "e5.value can not be null");
 		Objects.requireNonNull(e6, "e6 can not be null");
 		Objects.requireNonNull(e6.getKey(), "e6.key can not be null");
 		Objects.requireNonNull(e6.getValue(), "e6.value can not be null");
@@ -2182,9 +2182,9 @@ public final class New {
 		Map<K, V> map = new HashMap<>();
 		for (int i = 0; i < entries.length; i++) {
 			Map.Entry<? extends K, ? extends V> e = entries[i];
-			Objects.requireNonNull(e, "entry" + (i + 1) + " can not be null");
-			Objects.requireNonNull(e.getKey(), "entry" + (i + 1) + ".key can not be null");
-			Objects.requireNonNull(e.getValue(), "entry" + (i + 1) + ".value can not be null");
+			Objects.requireNonNull(e, "e" + (i + 1) + " can not be null");
+			Objects.requireNonNull(e.getKey(), "e" + (i + 1) + ".key can not be null");
+			Objects.requireNonNull(e.getValue(), "e" + (i + 1) + ".value can not be null");
 			checkRepeatedKey(map.put(e.getKey(), e.getValue()), i);
 		}
 		return Collections.unmodifiableMap(map);

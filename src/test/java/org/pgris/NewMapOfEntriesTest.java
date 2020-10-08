@@ -63,6 +63,32 @@ public class NewMapOfEntriesTest {
 	}
 
 	@Test
+	void testMap4NullEntry() {
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> New.mapOfEntries(New.entry("e0", 0), null, New.entry("e2", 2), New.entry("e3", 3)));
+		assertEquals("e2 can not be null", npe.getMessage());
+	}
+
+	@Test
+	void testMap4NullKey() {
+		Map.Entry<String, String> nullKeyEntry = new AbstractMap.SimpleEntry<>(null, "v");
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> New.mapOfEntries(New.entry("e0", 0), nullKeyEntry, New.entry("e2", 2), New.entry("e3", 3)));
+		assertEquals("e2.key can not be null", npe.getMessage());
+	}
+
+	@Test
+	void testMap4NullValue() {
+		Map.Entry<String, Integer> nullValueEntry = new AbstractMap.SimpleEntry<>("k", null);
+		Map.Entry<String, Integer> entry0 = New.entry("e0", 0);
+		Map.Entry<String, Integer> entry2 = New.entry("e2", 2);
+		Map.Entry<String, Integer> entry3 = New.entry("e3", 3);
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> New.mapOfEntries(entry0, nullValueEntry, entry2, entry3));
+		assertEquals("e2.value can not be null", npe.getMessage());
+	}
+
+	@Test
 	void testMap5() throws NoSuchMethodException {
 		Map<String, Integer> result = New.mapOfEntries(New.entry("e0", 0), New.entry("e1", 1), New.entry("e2", 2),
 				New.entry("e3", 3), New.entry("e4", 4));
@@ -123,7 +149,20 @@ public class NewMapOfEntriesTest {
 		assertElements(result, 10);
 		assertUnmodifiable(result);
 		assertNullEntriesNotAllowed(10);
+		assertNullKeysNotAllowed(10);
+		assertNullValuesNotAllowed(10);
+	}
 
+	@Test
+	void testMap11() throws NoSuchMethodException {
+		Map<String, Integer> result = New.mapOfEntries(New.entry("e0", 0), New.entry("e1", 1), New.entry("e2", 2),
+				New.entry("e3", 3), New.entry("e4", 4), New.entry("e5", 5), New.entry("e6", 6), New.entry("e7", 7),
+				New.entry("e8", 8), New.entry("e9", 9), New.entry("e10", 10));
+		assertElements(result, 11);
+		assertUnmodifiable(result);
+		assertNullEntriesNotAllowed(11);
+		assertNullKeysNotAllowed(11);
+		assertNullValuesNotAllowed(11);
 	}
 
 	private void assertElements(Map<String, Integer> result, int size) {
@@ -138,9 +177,16 @@ public class NewMapOfEntriesTest {
 	}
 
 	void assertNullEntriesNotAllowed(int size) throws NoSuchMethodException {
-		Class<?>[] parameterTypes = new Class[size];
-		Arrays.fill(parameterTypes, Map.Entry.class);
-		Method method = New.class.getMethod("mapOfEntries", parameterTypes);
+
+		Method method;
+		if (size <= 10) {
+			Class<?>[] parameterTypes = new Class[size];
+			Arrays.fill(parameterTypes, Map.Entry.class);
+			method = New.class.getMethod("mapOfEntries", parameterTypes);
+		}
+		else {
+			method = New.class.getMethod("mapOfEntries", Map.Entry[].class);
+		}
 
 		for (int nullPosition = 0; nullPosition < size; nullPosition++) {
 			Map.Entry<?, ?>[] arguments = new Map.Entry[size];
@@ -149,7 +195,13 @@ public class NewMapOfEntriesTest {
 			}
 			arguments[nullPosition] = null;
 
-			Executable executable = () -> method.invoke(null, (Object[]) arguments);
+			Executable executable;
+			if (size <= 10) {
+				executable = () -> method.invoke(null, (Object[]) arguments);
+			}
+			else {
+				executable = () -> method.invoke(null, new Object[] { arguments });
+			}
 
 			InvocationTargetException ite = assertThrows(InvocationTargetException.class, executable,
 					"The call to New.mapOfEntries("
@@ -169,9 +221,15 @@ public class NewMapOfEntriesTest {
 	}
 
 	void assertNullKeysNotAllowed(int size) throws NoSuchMethodException {
-		Class<?>[] parameterTypes = new Class[size];
-		Arrays.fill(parameterTypes, Map.Entry.class);
-		Method method = New.class.getMethod("mapOfEntries", parameterTypes);
+		Method method;
+		if (size <= 10) {
+			Class<?>[] parameterTypes = new Class[size];
+			Arrays.fill(parameterTypes, Map.Entry.class);
+			method = New.class.getMethod("mapOfEntries", parameterTypes);
+		}
+		else {
+			method = New.class.getMethod("mapOfEntries", Map.Entry[].class);
+		}
 
 		for (int nullPosition = 0; nullPosition < size; nullPosition++) {
 			Map.Entry<?, ?>[] arguments = new Map.Entry[size];
@@ -180,8 +238,13 @@ public class NewMapOfEntriesTest {
 			}
 			arguments[nullPosition] = new AbstractMap.SimpleImmutableEntry<>(null, "value" + (nullPosition + 1));
 
-			Executable executable = () -> method.invoke(null, (Object[]) arguments);
-
+			Executable executable;
+			if (size <= 10) {
+				executable = () -> method.invoke(null, (Object[]) arguments);
+			}
+			else {
+				executable = () -> method.invoke(null, new Object[] { arguments });
+			}
 			InvocationTargetException ite = assertThrows(InvocationTargetException.class, executable,
 					"The call to New.mapOfEntries("
 							+ Arrays.stream(arguments).map(String::valueOf).collect(Collectors.joining(", "))
@@ -200,9 +263,15 @@ public class NewMapOfEntriesTest {
 	}
 
 	void assertNullValuesNotAllowed(int size) throws NoSuchMethodException {
-		Class<?>[] parameterTypes = new Class[size];
-		Arrays.fill(parameterTypes, Map.Entry.class);
-		Method method = New.class.getMethod("mapOfEntries", parameterTypes);
+		Method method;
+		if (size <= 10) {
+			Class<?>[] parameterTypes = new Class[size];
+			Arrays.fill(parameterTypes, Map.Entry.class);
+			method = New.class.getMethod("mapOfEntries", parameterTypes);
+		}
+		else {
+			method = New.class.getMethod("mapOfEntries", Map.Entry[].class);
+		}
 
 		for (int nullPosition = 0; nullPosition < size; nullPosition++) {
 			Map.Entry<?, ?>[] arguments = new Map.Entry[size];
@@ -211,8 +280,13 @@ public class NewMapOfEntriesTest {
 			}
 			arguments[nullPosition] = new AbstractMap.SimpleImmutableEntry<>("key" + (nullPosition + 1), null);
 
-			Executable executable = () -> method.invoke(null, (Object[]) arguments);
-
+			Executable executable;
+			if (size <= 10) {
+				executable = () -> method.invoke(null, (Object[]) arguments);
+			}
+			else {
+				executable = () -> method.invoke(null, new Object[] { arguments });
+			}
 			InvocationTargetException ite = assertThrows(InvocationTargetException.class, executable,
 					"The call to New.mapOfEntries("
 							+ Arrays.stream(arguments).map(String::valueOf).collect(Collectors.joining(", "))
